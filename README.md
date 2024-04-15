@@ -1,7 +1,9 @@
 
 # Sistema de Gestión de Pacientes - API Backend
 
-Este proyecto es una API de backend para un sistema de gestión de pacientes en un asilo de ancianos. Permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre los datos de los pacientes, gestionar el almacenamiento de imágenes de los mismos y validar los datos ingresados.
+Este proyecto es una API de backend para un sistema de gestión de visitas a pacientes de un asilo de ancianos por parte del Hospital'Los Alerces'.
+
+Permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre los datos de los pacientes, gestionar el almacenamiento de imágenes de los mismos y validar los datos ingresados.
 
 ## Tecnologías utilizadas
 
@@ -21,13 +23,16 @@ Este proyecto es una API de backend para un sistema de gestión de pacientes en 
   - /config
     - Multer.js
   - /controllers
-    - pacienteController.js
+    - PacienteController.js
   - /models
     - Schema.js
   - /routes
     - Routes.js
-  - index.js
 - /uploads
+- index.js
+- package-lock.json
+- package.json
+- README.md
 ```
 
 ## Configuración

@@ -65,93 +65,44 @@ function GetPacienteById(req, res) {
     })
 }
 
-// Obtiene pacientes por sexo
-/*function GetPacienteBySexo(req, res) {
-    var sexo = req.params.sexo
-
-    PacienteSchema.find({ sexo: sexo })
-        .then((data) => {
-            if (data.length === 0) {
-                return res.json({
-                    status: 'succes',
-                    message: 'No existen registros con el sexo requerido.',
-                    sexoPaciente: sexo
-                })
-            }
-            return res.json({
-                status: 'success',
-                message: 'Registros encontrados.',
-                pacientes: data
-            })
-        }).catch((e) => {
-            return res.json({
-                status: 'error',
-                message: 'Error en la búsqueda.',
-                error: error.message
-            })
-        })
-}*/
-
 // Obtiene pacientes según fecha de ingreso
 function SearchPacientesByFechaIngreso(req, res) {
-    // Obtiene la fecha de ingreso ingresada considerando sólo los 10 primero caracteres
-    //var fechaIngresoRequerida = req.params.fechaIngreso.substring(0,10)
-
+    
     var filtro = req.params.filter
 
-    //var fechaIngresoRequerida = req.params.fechaIngreso;
-
-    /*var fechaInicio = new Date(fechaIngresoRequerida);
-    fechaInicio.setHours(0, 0, 0, 0); // Establece la hora a las 00:00:00
-
-    var fechaFin = new Date(fechaIngresoRequerida);
-    fechaFin.setHours(23, 59, 59, 999); // Establece la hora a las 23:59:59.999
-    // var fechaIngresoParseada = new Date(fechaIngresoRequerida)*/
-
-    /*
-    if (!fechaIngresoParseada || isNaN(fechaIngresoParseada)) {
-        return res.json({
-            status: 'error',
-            message: 'Formato de fecha inválido. El formato debe ser YYYY-MM-DD.',
-            fechaIngreso: fechaIngresoRequerida
-        });
-    }*/
-
-    //PacienteSchema.find({ fechaIngreso: { $regex: "^" + fechaIngresoRequerida } })
-        //PacienteSchema.find({ fechaIngreso: fechaIngresoRequerida })
-        var fechaFiltro = new Date(filtro)
-        fechaFiltro.setUTCHours(0, 0, 0, 0)
+    var fechaFiltro = new Date(filtro)
+    fechaFiltro.setUTCHours(0, 0, 0, 0)
         
-        var fechaSiguiente = new Date(filtro)
-        fechaSiguiente.setDate(fechaSiguiente.getDate() + 1)
-        fechaSiguiente.setUTCHours(0, 0, 0, 0)
+    var fechaSiguiente = new Date(filtro)
+    fechaSiguiente.setDate(fechaSiguiente.getDate() + 1)
+    fechaSiguiente.setUTCHours(0, 0, 0, 0)
 
-
-        PacienteSchema.find({ 
-            fechaIngreso: {
-                $gte: fechaFiltro,
-                $lt: fechaSiguiente
-            }
-        })
-        .then((data) => {
-            if (data.length === 0) {
-                return res.json({
-                    status: 'success',
-                    message: 'No existen registros con la fecha de ingreso requerida.',
-                })
-            }
+    PacienteSchema.find({ 
+        fechaIngreso: {
+            $gte: fechaFiltro,
+            $lt: fechaSiguiente
+        }
+    })
+    .then((data) => {
+        if (data.length === 0) {
             return res.json({
                 status: 'success',
-                message: 'Registros encontrados.',
-                pacientes: data
+                message: 'No existen registros con la fecha de ingreso requerida.',
             })
-        }).catch((error) => {
-            return res.json({
-                status: 'error',
-                message: 'Error en la búsqueda.',
-                error: error.message
-            })
+        }
+        return res.json({
+            status: 'success',
+            message: 'Registros encontrados.',
+            cantidad: data.length,
+            pacientes: data
         })
+    }).catch((error) => {
+        return res.json({
+            status: 'error',
+            message: 'Error en la búsqueda.',
+            error: error.message
+        })
+    })
 }
 
 // Obtiene pacientes por filtro (sexo o enfermedad)
@@ -161,7 +112,6 @@ function SearchPacientesByFilter(req, res) {
     PacienteSchema.find({ 
         "$or":[
             {"sexo": {"$regex": filtro, "$options": "i"}},
-            //{"fechaIngreso": filtro},
             {"enfermedad": {"$regex": filtro, "$options": "i"}}
         ]
     })
@@ -196,29 +146,29 @@ function SearchPacientesByFilter(req, res) {
 function GetPacientes(req, res) {
     
     PacienteSchema.find({ })
-        .sort({ fechaIngreso: 'desc' })    
-        .then((data) => {
-            if (data === null || data.length === 0) {
-                return res.json({
-                    status: 'success',
-                    message: 'No se encontraron registros.'
-                });
-            }
-
-            return res.json({
-                status: 'success',
-                message: 'Registros encontrados.',
-                total: data.length,
-                productos: data
-            })
-        })
-        .catch((e) => {
+    .sort({ fechaIngreso: 'desc' })    
+    .then((data) => {
+        if (data === null || data.length === 0) {
             return res.json({
                 status: 'error',
-                message: 'Error al buscar registros',
-                error: e.message
-            })
+                message: 'No se encontraron registros.'
+            });
+        }
+
+        return res.json({
+            status: 'success',
+            message: 'Registros encontrados.',
+            total: data.length,
+            productos: data
         })
+    })
+    .catch((e) => {
+        return res.json({
+            status: 'error',
+            message: 'Error al buscar registros',
+            error: e.message
+        })
+    })
 }
 
 // Actualiza registro por id
